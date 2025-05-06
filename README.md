@@ -1,36 +1,54 @@
-# 🛠️ 팀별 협업 가이드
- 1. 중앙 레포지토리 Fork
-+ 각 팀은 본 레포지토리를 Fork하여 팀별 저장소를 생성합니다.
+# React + TypeScript + Vite
 
- 2. 팀원 초대 및 협업 환경 구성
-+ 팀장은 팀원들을 Fork한 저장소의 Collaborator로 초대합니다.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-+ 팀원들은 팀 저장소를 Clone하여 개발 환경을 세팅합니다.
+Currently, two official plugins are available:
 
- 3. Git Flow 전략 적용
-+ 팀 저장소에서 develop 브랜치를 기준으로, 각 조별 브렌치 네이밍에 맞게 생성하여 작업합니다.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
- 4. 최종 결과물 PR 제출
-+ 팀별로 모든 작업이 완료되면, 팀 저장소의 develop 브랜치에서 추후 생성될 본 레포지토리의 develop-조번호 브랜치로 PR(Pull Request)을 생성합니다.
+## Expanding the ESLint configuration
 
-+ 예시: develop-6 (6조의 경우)
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
- 5. 코드 리뷰 및 병합
-+ 모든 팀은 다른 팀의 PR을 확인하고, 자유롭게 피드백을 남길 수 있습니다.
+```js
+export default tseslint.config({
+  extends: [
+    // Remove ...tseslint.configs.recommended and replace with this
+    ...tseslint.configs.recommendedTypeChecked,
+    // Alternatively, use this for stricter rules
+    ...tseslint.configs.strictTypeChecked,
+    // Optionally, add this for stylistic rules
+    ...tseslint.configs.stylisticTypeChecked,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-+ 최종적으로 관리자가 PR을 확인 후 병합합니다.
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-# 📌 브랜치 및 PR 네이밍 규칙
- + 팀별 PR 대상 브랜치:
-develop-조번호 (예: develop-3, develop-6)
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
- + 기능 개발 브랜치:
-각 조별 브렌치 네이밍 규칙 준수
-
- + PR 제목 예시:
-[6조] 최종 결과물 제출 
-
-# 🚨 유의사항
-+ 모든 커밋 메시지는 명확하게 작성해 주세요.
-
-+ 팀 저장소에서 PR 생성 시, 관련 이슈 번호를 반드시 연결해 주세요.
+export default tseslint.config({
+  plugins: {
+    // Add the react-x and react-dom plugins
+    'react-x': reactX,
+    'react-dom': reactDom,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended typescript rules
+    ...reactX.configs['recommended-typescript'].rules,
+    ...reactDom.configs.recommended.rules,
+  },
+})
+```
