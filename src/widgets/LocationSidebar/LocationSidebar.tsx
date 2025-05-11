@@ -8,7 +8,11 @@ import PinIcon from "@/assets/icons/pin-front-clay.png";
 import ColorPinIcon from "@/assets/icons/pin-front-color.png";
 import TrashIcon from "@/assets/icons/trash-can-front-color.png";
 
-const LocationSidebar = () => {
+interface LocationSidebarProps {
+  openModal: () => void;
+}
+
+const LocationSidebar = ({ openModal }: LocationSidebarProps) => {
   const { locations, removeLocation } = useLocationStore();
   const [activeIcon, setActiveIcon] = useState<{ [key: string]: boolean }>({});
 
@@ -40,7 +44,10 @@ const LocationSidebar = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-[16px] cursor-pointer">
+      <div
+        className="flex items-center gap-[16px] cursor-pointer"
+        onClick={openModal}
+      >
         <img
           className="w-[40px] h-[40px] aspect-square"
           src={PlusIcon}
