@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import CloseIcon from "@/assets/icons/close-icon.png";
 import Clouds from "@/assets/Clouds.png";
@@ -16,6 +17,28 @@ const sampleLocations = [
 ];
 
 const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+
+  // 검색어 필터링
+  const filteredLocations = sampleLocations.filter((location) =>
+    location.name.includes(searchKeyword)
+  );
+
+  // 체크 아이콘 토글
+  const handleLocationClick = (id: string) => {
+    setSelectedLocation((prev) => (prev === id ? null : id));
+  };
+
+  // 확인 버튼 클릭 시
+  const handleConfirm = () => {
+    if (selectedLocation) {
+      console.log("선택된 위치:", selectedLocation);
+      // 이후 메인 화면과 연결 예정
+    }
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return createPortal(
@@ -49,9 +72,10 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
               <input
                 type="text"
                 placeholder="장소를 입력하세요"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
                 className="flex-1 bg-transparent border-none outline-none placeholder:text-[#A4A4A4] placeholder:font-pretendard placeholder:text-[16px] placeholder:font-normal placeholder:leading-none"
               />
-
               <div
                 className="w-[24px] h-[24px] aspect-square bg-lightgray bg-cover bg-center"
                 style={{ backgroundImage: `url(${SearchIcon})` }}
@@ -60,36 +84,47 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
           </div>
         </div>
 
-        <div className="flex flex-col items-start gap-[16px] p-[8px_16px] h-[240px] self-stretch border border-[#A4A4A4] rounded-[8px] overflow-y-auto">
-          {sampleLocations.map((location) => (
-            <div
-              key={location.id}
-              className="relative flex items-center p-[8px_12px] gap-[4px] self-stretch border-b border-[#A4A4A4]"
-            >
-              <div className="flex flex-col gap-[4px]">
-                <div className="text-[#000000] font-pretendard text-[16px] font-[500] leading-none">
-                  {location.name}
-                </div>
-
-                <div className="text-[#A4A4A4] font-pretendard text-[12px] font-[400] leading-none">
-                  {location.address}
-                </div>
-              </div>
-
+        <div className="flex flex-col gap-[16px] p-[8px_16px] h-[240px] overflow-y-auto border border-[#A4A4A4] rounded-[8px]">
+          {filteredLocations.length > 0 ? (
+            filteredLocations.map((location) => (
               <div
-                className="absolute right-[8px] bottom-[7.5px] w-[36px] h-[36px] aspect-square bg-lightgray bg-cover bg-center"
-                style={{ backgroundImage: `url(${CheckIcon}) ` }}
-              ></div>
+                key={location.id}
+                className={`relative flex items-center p-[8px_12px] gap-[4px] cursor-pointer border-b border-[#A4A4A4] ${
+                  selectedLocation === location.id ? "bg-gray-100" : ""
+                }`}
+                onClick={() => handleLocationClick(location.id)}
+              >
+                <div className="flex flex-col gap-[4px] flex-1">
+                  <div className="text-[#000000] font-pretendard text-[16px] font-[500] leading-none">
+                    {location.name}
+                  </div>
+                  <div className="text-[#A4A4A4] font-pretendard text-[12px] font-[400] leading-none">
+                    {location.address}
+                  </div>
+                </div>
+
+                {selectedLocation === location.id && (
+                  <div
+                    className="absolute right-[8px] bottom-[7.5px] w-[36px] h-[36px] bg-cover bg-center"
+                    style={{ backgroundImage: `url(${CheckIcon})` }}
+                  ></div>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="text-[#A4A4A4] font-pretendard text-[16px]">
+              검색 결과가 없습니다.
             </div>
-          ))}
+          )}
         </div>
 
-        <div className="flex justify-end items-end self-stretch">
-          <div className="flex p-[6px_30px] justify-center items-center rounded-[6px] bg-[#292E2E]">
-            <div className="text-[#FFFFFF] font-pretendard text-[20px] font-[600] leading-none">
-              확인
-            </div>
-          </div>
+        <div className="flex justify-end mt-[16px]">
+          <button
+            onClick={handleConfirm}
+            className="bg-[#292E2E] text-[#FFFFFF] px-[30px] py-[6px] rounded-[6px] font-pretendard text-[20px] font-[600]"
+          >
+            확인
+          </button>
         </div>
       </div>
     </div>,
