@@ -1,11 +1,11 @@
 import { DailyWeatherCard } from './ui/DailyWeatherCard';
 import { HourlyTimeline } from './ui/HourlyTimeline';
 import { WeeklyForecast } from './ui/WeeklyForecast';
-import { usePlaceStore } from '@/shared/store/usePlaceStore';
-import CloudsImage from '@/assets/Clouds.png';
+import useLocationStore from '@/shared/store/useLocationStore';
+import CloudsImage from '@/assets/icons/Clouds.png';
 
 export const WeatherPanel = () => {
-  const { placeId } = usePlaceStore();
+  const { selectedLocation: placeId } = useLocationStore();
 
   if (!placeId) {
     return (

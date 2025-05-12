@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import type { HourlyWeather } from '@/entities/weather/model/types';
 import { fetchHourlyWeather } from '@/entities/weather/api/weatherApi';
-import { usePlaceStore } from '@/shared/store/usePlaceStore';
+import useLocationStore from '@/shared/store/useLocationStore';
 
 export const HourlyTimeline = () => {
-  const { placeId } = usePlaceStore();
+  const { selectedLocation: placeId } = useLocationStore();
   const { data, isLoading } = useQuery<HourlyWeather[]>({
     queryKey: ['hourlyWeather', placeId],
-    queryFn: () => fetchHourlyWeather(placeId),
+    queryFn: () => fetchHourlyWeather(placeId!),
     enabled: !!placeId,
   });
   

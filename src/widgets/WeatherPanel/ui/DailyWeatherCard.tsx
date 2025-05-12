@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchDailyWeather } from '@/entities/weather/api/weatherApi';
-import { usePlaceStore } from '@/shared/store/usePlaceStore';
+import useLocationStore from '@/shared/store/useLocationStore';
 import dayjs from 'dayjs';
 
 export const DailyWeatherCard = () => {
-  const { placeId } = usePlaceStore();
+  const { selectedLocation: placeId } = useLocationStore();
   const date = dayjs().format('YYYY-MM-DD');
   const { data, isLoading } = useQuery({
     queryKey: ['weather', placeId, date],
-    queryFn: () => fetchDailyWeather(placeId, date),
+    queryFn: () => fetchDailyWeather(placeId!, date),
     enabled: !!placeId,
   });  
 

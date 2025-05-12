@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import type { DailyForecast } from '@/entities/weather/model/types';
 import { fetchWeeklyWeather } from '@/entities/weather/api/weatherApi';
-import { usePlaceStore } from '@/shared/store/usePlaceStore';
+import useLocationStore from '@/shared/store/useLocationStore';
 import dayjs from 'dayjs';
 
 export const WeeklyForecast = () => {
-  const { placeId } = usePlaceStore();
+  const { selectedLocation: placeId } = useLocationStore();
   const { data, isLoading } = useQuery<DailyForecast[]>({
     queryKey: ['weeklyWeather', placeId],
-    queryFn: () => fetchWeeklyWeather(placeId),
+    queryFn: () => fetchWeeklyWeather(placeId!),
     enabled: !!placeId,
   });
   
