@@ -10,17 +10,15 @@ import TrashIcon from "@/assets/icons/trash-can-front-color.png";
 
 interface LocationSidebarProps {
   openModal: () => void;
+  openDeleteModal: () => void;
 }
 
-const LocationSidebar = ({ openModal }: LocationSidebarProps) => {
-  const { locations, removeLocation } = useLocationStore();
+const LocationSidebar = ({
+  openModal,
+  openDeleteModal,
+}: LocationSidebarProps) => {
+  const { locations } = useLocationStore();
   const [activeIcon, setActiveIcon] = useState<{ [key: string]: boolean }>({});
-
-  // 위치 삭제
-  const handleRemove = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    removeLocation(id);
-  };
 
   // 아이콘 클릭 시 ColorPinIcon으로 토글 (고정 기능)
   const handleIconClick = (id: string, e: React.MouseEvent) => {
@@ -77,7 +75,7 @@ const LocationSidebar = ({ openModal }: LocationSidebarProps) => {
 
             <div
               className="ml-auto p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={(e) => handleRemove(loc.id, e)}
+              onClick={openDeleteModal}
             >
               <img
                 src={TrashIcon}

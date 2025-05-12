@@ -42,7 +42,7 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed left-1/2 top-1/2 transform -translate-x-1/4 -translate-y-1/2 z-[50] p-[36px_72px] bg-[#FFFFFF] rounded-[16px] shadow-[4px_4px_4px_3px_rgba(0,0,0,0.25)]">
+    <div className="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[50] p-[36px_72px] bg-[#FFFFFF] rounded-[16px] shadow-[4px_4px_4px_3px_rgba(0,0,0,0.25)]">
       <button
         className="absolute right-[16px] top-[16.5px] w-[24px] h-[24px] aspect-square filter drop-shadow-[-2px_2px_2px_rgba(0,0,0,0.1)] cursor-pointer bg-transparent border-none outline-none"
         onClick={onClose}
