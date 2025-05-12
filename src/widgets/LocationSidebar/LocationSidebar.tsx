@@ -8,15 +8,17 @@ import PinIcon from "@/assets/icons/pin-front-clay.png";
 import ColorPinIcon from "@/assets/icons/pin-front-color.png";
 import TrashIcon from "@/assets/icons/trash-can-front-color.png";
 
-const LocationSidebar = () => {
-  const { locations, removeLocation } = useLocationStore();
-  const [activeIcon, setActiveIcon] = useState<{ [key: string]: boolean }>({});
+interface LocationSidebarProps {
+  openModal: () => void;
+  openDeleteModal: () => void;
+}
 
-  // 위치 삭제
-  const handleRemove = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    removeLocation(id);
-  };
+const LocationSidebar = ({
+  openModal,
+  openDeleteModal,
+}: LocationSidebarProps) => {
+  const { locations } = useLocationStore();
+  const [activeIcon, setActiveIcon] = useState<{ [key: string]: boolean }>({});
 
   // 아이콘 클릭 시 ColorPinIcon으로 토글 (고정 기능)
   const handleIconClick = (id: string, e: React.MouseEvent) => {
@@ -40,7 +42,10 @@ const LocationSidebar = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-[16px] cursor-pointer">
+      <div
+        className="flex items-center gap-[16px] cursor-pointer"
+        onClick={openModal}
+      >
         <img
           className="w-[40px] h-[40px] aspect-square"
           src={PlusIcon}
@@ -70,7 +75,7 @@ const LocationSidebar = () => {
 
             <div
               className="ml-auto p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={(e) => handleRemove(loc.id, e)}
+              onClick={openDeleteModal}
             >
               <img
                 src={TrashIcon}
