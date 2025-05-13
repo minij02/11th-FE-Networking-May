@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",                    // 기준 경로
+    "verbatimModuleSyntax": false,
+    "baseUrl": ".", // 기준 경로
     "paths": {
-      "@/*": ["src/*"]                // @/ → src/ 경로 매핑
+      "@/*": ["src/*"] // @/ → src/ 경로 매핑
     }
   },
   "files": [],
