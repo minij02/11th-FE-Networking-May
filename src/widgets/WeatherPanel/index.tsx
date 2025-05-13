@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { DailyWeatherCard } from "./ui/DailyWeatherCard";
-// import { HourlyTimeline } from './ui/HourlyTimeline';
+import { HourlyTimeline } from "./ui/HourlyTimeline";
 import { WeeklyForecast } from "./ui/WeeklyForecast";
 import useLocationStore from "@/shared/store/useLocationStore";
 import CloudsImage from "@/assets/icons/clouds-morning.png";
@@ -46,7 +46,7 @@ export const WeatherPanel = () => {
                   rounded-[16px] border border-[#F2F2F2] bg-white
                   shadow-[0px_0px_8px_2px_rgba(0,0,0,0.10)]"
       >
-        {/* <HourlyTimeline /> */}
+        <HourlyTimeline />
       </div>
 
       <div
