@@ -9,35 +9,34 @@ import { useMemo } from 'react';
 
 export const HourlyTimeline = () => {
   const { selectedLocation: placeId } = useLocationStore();
+
   const { data, isLoading } = useQuery<HourlyWeather[]>({
     queryKey: ['hourlyWeather', placeId],
     queryFn: () => fetchHourlyWeather(placeId!),
     enabled: !!placeId,
   });
 
-  if (isLoading || !data) return <div>시간별 날씨 로딩 중...</div>;
-
-  // 가장 낮은 온도와 가장 높은 온도를 계산
-  const temps = data.map((d) => d.temp);
+  const temps = data?.map((d) => d.temp) ?? [];
   const minTemp = Math.min(...temps);
   const maxTemp = Math.max(...temps);
 
-  // 선 그래프 좌표 계산
   const points = useMemo(() => {
-    const totalWidth = data.length * 96; // 카드 하나 폭 + gap 대략 96px
+    if (!data) return '';
     return data.map((hour, index) => {
-      const x = index * 96 + 48; // 가운데 위치
-      const y = 80 - ((hour.temp - minTemp) / (maxTemp - minTemp || 1)) * 60; // 0~60 범위로 반영
+      const x = index * 96 + 48; // 가운데 정렬
+      const y = 80 - ((hour.temp - minTemp) / (maxTemp - minTemp || 1)) * 60;
       return `${x},${y}`;
     }).join(' ');
-  }, [data]);
+  }, [data, minTemp, maxTemp]);
+
+  if (isLoading || !data) return <div>시간별 날씨 로딩 중...</div>;
 
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="text-base font-semibold text-black font-pretendard">시간별 현황</div>
 
       <div className="relative overflow-x-auto">
-        {/* SVG 라인 그래프 */}
+        {/* 선 그래프 */}
         <svg
           className="absolute left-0 top-0 z-0"
           width={data.length * 96}
@@ -45,7 +44,7 @@ export const HourlyTimeline = () => {
         >
           <polyline
             fill="none"
-            stroke="#3B82F6" // 파란색 선
+            stroke="#3B82F6"
             strokeWidth="2"
             points={points}
           />
@@ -57,7 +56,6 @@ export const HourlyTimeline = () => {
             const dateTime = dayjs(`${baseDate} ${hour.time}`);
             const hourNumber = dateTime.hour();
             const iconSrc = hourNumber >= 6 && hourNumber < 18 ? WindIcon : WindAfternoonIcon;
-
             const dotY = 80 - ((hour.temp - minTemp) / (maxTemp - minTemp || 1)) * 60;
 
             return (
