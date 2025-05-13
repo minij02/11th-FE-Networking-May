@@ -4,44 +4,50 @@ import LocationSidebar from "@/widgets/LocationSidebar/LocationSidebar";
 import AddLocationModal from "@/features/add-location/ui/AddLocationModal";
 import DeleteConfirmModal from "@/features/delete-location/ui/DeleteConfirmModal";
 
+type ModalType = "add" | "delete" | null;
+
 const MainLayout = () => {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState<ModalType>(null);
 
-  // 위치 추가 모달 열기/닫기
-  const openAddModal = () => setIsAddModalOpen(true);
-  const closeAddModal = () => setIsAddModalOpen(false);
+  // 모달 열기
+  const openModal = (type: ModalType) => setActiveModal(type);
 
-  // 삭제 확인 모달 열기/닫기
-  const openDeleteModal = () => setIsDeleteModalOpen(true);
-  const closeDeleteModal = () => setIsDeleteModalOpen(false);
+  // 모달 닫기
+  const closeModal = () => setActiveModal(null);
+
+  const handleDelete = () => {
+    console.log("삭제됨");
+    closeModal();
+  };
 
   return (
     <div className="relative flex h-screen">
       <LocationSidebar
-        openModal={openAddModal}
-        openDeleteModal={openDeleteModal}
+        openModal={() => openModal("add")}
+        openDeleteModal={() => openModal("delete")}
       />
 
       <main className="flex-1 ml-[248px] p-4 relative z-[10]">
         <Outlet />
       </main>
 
-      {(isAddModalOpen || isDeleteModalOpen) && (
+      {activeModal && (
         <div
           className="fixed inset-0 bg-[rgba(41,46,46,0.40)] z-[30] w-full h-full"
-          onClick={() => {
-            closeAddModal();
-            closeDeleteModal();
-          }}
+          onClick={closeModal}
         />
       )}
 
-      <AddLocationModal isOpen={isAddModalOpen} onClose={closeAddModal} />
-      <DeleteConfirmModal
-        isOpen={isDeleteModalOpen}
-        onClose={closeDeleteModal}
-      />
+      {activeModal === "add" && (
+        <AddLocationModal isOpen={true} onClose={closeModal} />
+      )}
+      {activeModal === "delete" && (
+        <DeleteConfirmModal
+          isOpen={true}
+          onClose={closeModal}
+          onDelete={handleDelete}
+        />
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
-import { createPortal } from "react-dom";
+import { useEffect } from "react";
 import ThunderIcon from "@/assets/thunder-icon.png";
+import ModalPortal from "@/shared/ui/ModalPortal";
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
@@ -12,10 +13,23 @@ const DeleteConfirmModal = ({
   onClose,
   onDelete,
 }: DeleteConfirmModalProps) => {
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [onClose]);
+
   if (!isOpen) return null;
 
-  return createPortal(
-    <>
+  return (
+    <ModalPortal>
       <div className="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[50] p-[36px_108px] flex flex-col justify-center items-center gap-[24px] rounded-[16px] bg-[#FFFFFF] shadow-[4px_4px_4px_3px_rgba(0,0,0,0.25)] w-[330px]">
         <div className="text-[#292E2E] font-pretendard text-[32px] font-[700] leading-none">
           정말로 삭제하시겠습니까?
@@ -41,8 +55,7 @@ const DeleteConfirmModal = ({
           </button>
         </div>
       </div>
-    </>,
-    document.body
+    </ModalPortal>
   );
 };
 
