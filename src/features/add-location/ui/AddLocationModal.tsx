@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import CloseIcon from "@/assets/icons/close-icon.png";
 import Clouds from "@/assets/icons/clouds-morning.png";
@@ -38,6 +38,19 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
     }
     onClose();
   };
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [onClose]);
 
   if (!isOpen) return null;
 

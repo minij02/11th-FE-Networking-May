@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import ThunderIcon from "@/assets/thunder-icon.png";
 
@@ -12,6 +13,19 @@ const DeleteConfirmModal = ({
   onClose,
   onDelete,
 }: DeleteConfirmModalProps) => {
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [onClose]);
+
   if (!isOpen) return null;
 
   return createPortal(
