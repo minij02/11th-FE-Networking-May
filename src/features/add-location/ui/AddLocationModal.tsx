@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import CloseIcon from "@/assets/icons/close-icon.png";
-import Clouds from "@/assets/icons/Clouds.png";
+import Clouds from "@/assets/icons/clouds-morning.png";
 import SearchIcon from "@/assets/icons/search-icon.png";
 import CheckIcon from "@/assets/icons/check-icon.png";
 
