@@ -2,6 +2,7 @@
   "compilerOptions": {
     "verbatimModuleSyntax": false,
     "baseUrl": ".", // 기준 경로
+    "types": ["kakao.maps.d.ts"],
     "paths": {
       "@/*": ["src/*"] // @/ → src/ 경로 매핑
     }

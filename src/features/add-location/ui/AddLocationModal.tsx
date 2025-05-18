@@ -10,31 +10,70 @@ interface AddLocationModalProps {
   onClose: () => void;
 }
 
-const sampleLocations = [
-  { id: "1", name: "KFC 광화문점", address: "서울 종로구 세종로 161-1" },
-  { id: "2", name: "KFC 부산서면점", address: "부산 부산진구 부전동 241-17" },
-  { id: "3", name: "KFC 홍익대점", address: "서울 마포구 동교동 165-8" },
-];
+interface Marker {
+  position: {
+    lat: number;
+    lng: number;
+  };
+  content: string;
+  address: string;
+}
 
 const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [markers, setMarkers] = useState<Marker[]>([]);
 
-  // 검색어 필터링
-  const filteredLocations = sampleLocations.filter((location) =>
-    location.name.includes(searchKeyword)
-  );
+  // 검색어 변경 시 검색 요청
+  useEffect(() => {
+    if (!searchKeyword) return;
 
-  // 체크 아이콘 토글
-  const handleLocationClick = (id: string) => {
-    setSelectedLocation((prev) => (prev === id ? null : id));
+    const ps = new kakao.maps.services.Places();
+
+    ps.keywordSearch(searchKeyword, (data, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const bounds = new kakao.maps.LatLngBounds();
+        const newMarkers: Marker[] = data.map((place) => {
+          const position = {
+            lat: parseFloat(place.y),
+            lng: parseFloat(place.x),
+          };
+          bounds.extend(new kakao.maps.LatLng(position.lat, position.lng));
+
+          return {
+            position,
+            content: place.place_name,
+            address: place.road_address_name || place.address_name,
+          };
+        });
+
+        setMarkers(newMarkers);
+      } else {
+        console.warn(`검색 결과가 없습니다: ${status}`);
+        setMarkers([]);
+      }
+    });
+  }, [searchKeyword]);
+
+  // 검색어 입력 처리
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+  };
+
+  // 체크 아이콘 토글 기능
+  const handleLocationClick = (marker: Marker) => {
+    setSelectedLocation((prev) =>
+      prev === marker.content ? null : marker.content
+    );
   };
 
   // 확인 버튼 클릭 시
   const handleConfirm = () => {
     if (selectedLocation) {
-      console.log("선택된 위치:", selectedLocation);
-      // 이후 메인 화면과 연결 예정
+      const selectedPlace = markers.find(
+        (marker) => marker.content === selectedLocation
+      );
+      console.log("선택된 위치:", selectedPlace);
     }
     onClose();
   };
@@ -72,7 +111,7 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
             ></div>
 
             <h2 className="text-[#292E2E] font-pretendard text-[32px] font-bold leading-none">
-              날씨 위치 추가
+              장소 검색 및 추가
             </h2>
           </div>
 
@@ -87,7 +126,7 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
                   type="text"
                   placeholder="장소를 입력하세요"
                   value={searchKeyword}
-                  onChange={(e) => setSearchKeyword(e.target.value)}
+                  onChange={handleSearchChange}
                   className="flex-1 bg-transparent border-none outline-none placeholder:text-[#A4A4A4] placeholder:font-pretendard placeholder:text-[16px] placeholder:font-normal placeholder:leading-none"
                 />
                 <div
@@ -99,25 +138,25 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
           </div>
 
           <div className="flex flex-col gap-[16px] p-[8px_16px] h-[240px] overflow-y-auto border border-[#A4A4A4] rounded-[8px]">
-            {filteredLocations.length > 0 ? (
-              filteredLocations.map((location) => (
+            {markers.length > 0 ? (
+              markers.map((marker) => (
                 <div
-                  key={location.id}
+                  key={`${marker.position.lat}-${marker.position.lng}`}
                   className={`relative flex items-center p-[8px_12px] gap-[4px] cursor-pointer border-b border-[#A4A4A4] ${
-                    selectedLocation === location.id ? "bg-gray-100" : ""
+                    selectedLocation === marker.content ? "bg-gray-100" : ""
                   }`}
-                  onClick={() => handleLocationClick(location.id)}
+                  onClick={() => handleLocationClick(marker)}
                 >
                   <div className="flex flex-col gap-[4px] flex-1">
                     <div className="text-[#000000] font-pretendard text-[16px] font-[500] leading-none">
-                      {location.name}
+                      {marker.content}
                     </div>
                     <div className="text-[#A4A4A4] font-pretendard text-[12px] font-[400] leading-none">
-                      {location.address}
+                      {marker.address}
                     </div>
                   </div>
 
-                  {selectedLocation === location.id && (
+                  {selectedLocation === marker.content && (
                     <div
                       className="absolute right-[8px] bottom-[7.5px] w-[36px] h-[36px] bg-cover bg-center"
                       style={{ backgroundImage: `url(${CheckIcon})` }}
