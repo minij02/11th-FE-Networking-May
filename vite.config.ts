@@ -10,4 +10,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"), // @ → src/
     },
   },
+   server: {
+    proxy: {
+      '/api': {
+        target: 'http://ec2-43-203-7-170.ap-northeast-2.compute.amazonaws.com:8080',
+        changeOrigin: true,
+      },
+    },
+  },
 });
