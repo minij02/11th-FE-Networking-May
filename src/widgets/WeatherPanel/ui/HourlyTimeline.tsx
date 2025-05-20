@@ -15,7 +15,7 @@ export const HourlyTimeline = () => {
     queryKey: ['weather', placeId],
     queryFn: () => fetchWeather(placeId!),
     enabled: !!placeId,
-  });  
+  });
 
   const hourlyData: HourlyWeather[] = data?.hourlyResponse ?? mockWeatherData.hourlyResponse;
 
@@ -23,27 +23,27 @@ export const HourlyTimeline = () => {
   const minTemp = Math.min(...temps);
   const maxTemp = Math.max(...temps);
 
- const points = useMemo(() => {
-    return hourlyData
-      .map((hour, index) => {
-        const x = index * 96 + 48;
-        const y = 80 - ((hour.temperature - minTemp) / (maxTemp - minTemp || 1)) * 60;
-        return `${x},${y}`;
-      })
-      .join(" ");
+  const cardWidth = 96;
+  const gap = 16;
+  const svgWidth = cardWidth * hourlyData.length + gap * (hourlyData.length - 1);
+
+  const points = useMemo(() => {
+    return hourlyData.map((hour, index) => {
+      const x = index * (cardWidth + gap) + cardWidth / 2;
+      const y = 80 - ((hour.temperature - minTemp) / (maxTemp - minTemp || 1)) * 60;
+      return `${x},${y}`;
+    }).join(" ");
   }, [hourlyData, minTemp, maxTemp]);
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <div className="text-base font-semibold text-black font-pretendard">
-        시간별 현황
-      </div>
+      <div className="text-base font-semibold text-black font-pretendard">시간별 현황</div>
 
       <div className="relative overflow-x-auto">
         {/* 선 그래프 */}
         <svg
-          className="absolute left-0 top-0 z-0"
-          width={hourlyData.length * 96}
+          className="absolute top-0 left-0 z-0"
+          width={svgWidth}
           height={100}
         >
           <polyline
@@ -54,19 +54,18 @@ export const HourlyTimeline = () => {
           />
         </svg>
 
-        <div className="flex gap-4 z-10 relative pl-2">
-           {hourlyData.map((hour, index) => {
-            const dateTime = dayjs(hour.date); // ⬅ ISO 형식의 문자열
+        <div className="flex gap-[16px] z-10 relative pl-2 pr-4" style={{ minWidth: svgWidth }}>
+          {hourlyData.map((hour, index) => {
+            const dateTime = dayjs(hour.date);
             const hourNumber = dateTime.hour();
             const iconSrc = hourNumber >= 6 && hourNumber < 18 ? WindIcon : WindAfternoonIcon;
-            const dotY =
-              80 - ((hour.temperature - minTemp) / (maxTemp - minTemp || 1)) * 60;
+            const dotY = 80 - ((hour.temperature - minTemp) / (maxTemp - minTemp || 1)) * 60;
 
             return (
               <div
                 key={hour.date}
                 className="flex flex-col items-start p-[12px] px-[24px] flex-shrink-0"
-                style={{ width: 96 }}
+                style={{ width: cardWidth }}
               >
                 <div className="flex flex-col items-center gap-[8px] relative">
                   {/* 점 */}

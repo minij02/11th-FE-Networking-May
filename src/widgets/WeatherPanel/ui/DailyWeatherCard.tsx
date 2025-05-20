@@ -7,7 +7,8 @@ import { mockWeatherData } from '@/entities/weather/model/types';
 import CloudsAfternoonIcon from '@/assets/icons/clouds-night.png';
 
 export const DailyWeatherCard = () => {
-  const { selectedLocation: placeId } = useLocationStore();
+  const { selectedLocation: placeId, locations } = useLocationStore();
+  const locationName = locations.find((loc) => loc.id === placeId)?.name ?? '';
 
   const { data, isLoading } = useQuery({
     queryKey: ['weather', placeId],
@@ -16,6 +17,7 @@ export const DailyWeatherCard = () => {
   });  
 
   const weather = data ?? mockWeatherData;
+
   const {
     temperature,
     feelsLike,
@@ -31,7 +33,7 @@ export const DailyWeatherCard = () => {
   <div className="flex w-[1080px] p-8 flex-col items-start gap-3">
 
   <div className="text-[20px] font-bold text-black font-pretendard">
-    {dayjs().format('M월 D일')} 날씨 현황
+    {dayjs().format('M월 D일')} {locationName} 날씨 현황
   </div>
 
   {/* 이 블록은 세로로 구성됨 */}
