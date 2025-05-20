@@ -7,6 +7,18 @@ import { mockWeatherData } from '@/entities/weather/model/types';
 import CloudsAfternoonIcon from '@/assets/icons/clouds-night.png';
 import { useEffect } from 'react';
 import { formatTemperature } from '@/shared/lib/weatherUtils';
+import MorningSun from '@assets/icons/sun-morning.png';
+import NightSun from '@assets/icons/sun-night.png';
+import MorningClouds from '@assets/icons/clouds-morning.png';
+import NightClouds from '@assets/icons/clouds-night.png';
+import MorningRain from '@assets/icons/rain-morning.png';
+import NightRain from '@assets/icons/rain-night.png';
+import MorningWind from '@assets/icons/wind-morning.png';
+import NightWind from '@assets/icons/wind-night.png';
+import MorningSnow from '@assets/icons/snow-morning.png';
+import NightSnow from '@assets/icons/snow-night.png';
+import MorningLightning from '@assets/icons/lightning-morning.png';
+import NightLightning from '@assets/icons/lightning-night.png';
 
 export const DailyWeatherCard = () => {
   const { selectedLocation: placeId, locations } = useLocationStore();
@@ -47,6 +59,29 @@ export const DailyWeatherCard = () => {
     : true;
   const timeLabel = isDaytime ? "주간" : "야간";
 
+  const getWeatherIcon = (description: string, isDaytime: boolean) => {
+  const desc = description.toLowerCase();
+
+  if (desc.includes('clear')) {
+    return isDaytime ? MorningSun : NightSun;
+  }
+  if (desc.includes('cloud')) {
+    return isDaytime ? MorningClouds : NightClouds;
+  }
+  if (desc.includes('rain')) {
+    return isDaytime ? MorningRain : NightRain;
+  }
+  if (desc.includes('thunderstorm')) {
+    return isDaytime ? MorningLightning : NightLightning;
+  }
+  if (desc.includes('snow')) {
+    return isDaytime ? MorningSnow : NightSnow;
+  }
+
+  // 기본 아이콘 (wind)
+  return isDaytime ? MorningWind : NightWind;
+};
+
   return (
   <div className="flex w-[1080px] p-8 flex-col items-start gap-3">
 
@@ -58,7 +93,7 @@ export const DailyWeatherCard = () => {
   <div className="flex flex-col items-center gap-[10px] p-[10px] self-stretch">
     <div className="flex justify-center items-center gap-[10px]">
       <div className="w-[160px] h-[160px] aspect-square flex justify-center items-center">
-        <img src={CloudsAfternoonIcon} alt="weather icon" className="object-contain w-full h-full" />
+        <img src={getWeatherIcon(weatherDescription, isDaytime)} alt="weather icon" className="object-contain w-full h-full" />
       </div>
       <span className="text-[80px] font-[700] font-bold text-[#292E2E] font-pretendard">
         {formatTemperature(temperature)}°
