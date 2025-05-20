@@ -1,232 +1,119 @@
-export type HourlyWeather = {
-  time: string;
-  condition: string;
-  temp: number;
-};
-export interface RawHourlyWeather {
-  dt: number; // UNIX timestamp
-  temp: number;
-  weather: {
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  }[];
+export interface CurrentResponse {
+  date: string;
+  weatherDescription: string;
+  temperature: number;
+  feelsLike: number;
+  humidity: number;
+  windDirection: string;
+  sunset: string;
+  uviLevel: string;
+  windSpeed: number;
+  airPollution: {
+    pm10Level: string;
+    pm2_5Level: string;
+  };
+}
+ export interface DailyForecast {
+  date: string;
+  weatherDescription: string;
+  dayTemperature: number;
+  eveTemperature: number;
+  humidity: number;
 }
 
-  export type DailyForecast = {
-    date: string;
-    morning: {
-      temp: number;
-      precip?: number;
-      condition: string;
-    };
-    afternoon: {
-      temp: number;
-      precip?: number;
-      condition: string;
-    };
-  };
+export interface HourlyWeather {
+  date: string; // 시각 (e.g., "2025-05-12T10:00")
+  weatherDescription: string;
+  temperature: number;
+}
 
-  export interface WeatherData {
-  location: string;
-  current: {
-    temp: number;
-    feels_like: number;
-    humidity: number;
-    wind_speed: number;
-    uvi: number;
-    sunrise: number;
-    weather: {
-      id: number;
-      main: string;
-      description: string;
-      icon: string;
-    }[];
-  };
-  pm10Grade: string;
-  pm25Grade: string;
-};
-
-export const mockHourlyWeather: HourlyWeather[] = [
-  {
-    time: '10:00',
-    condition: '04n', // 아이콘 이름
-    temp: 18.9,
-  },
-  {
-    time: '11:00',
-    condition: '04n',
-    temp: 19.1,
-  },
-  {
-    time: '12:00',
-    condition: '01d',
-    temp: 20.4,
-  },
-  {
-    time: '13:00',
-    condition: '01d',
-    temp: 21.2,
-  },
-  {
-    time: '14:00',
-    condition: '01d',
-    temp: 22.6,
-  },
-  {
-    time: '15:00',
-    condition: '01d',
-    temp: 23.1,
-  },
-  {
-    time: '16:00',
-    condition: '02d',
-    temp: 22.7,
-  },
-  {
-    time: '17:00',
-    condition: '03d',
-    temp: 21.5,
-  },
-  {
-    time: '18:00',
-    condition: '03d',
-    temp: 20.4,
-  },
-  {
-    time: '19:00',
-    condition: '03d',
-    temp: 19.2,
-  },
-  {
-    time: '20:00',
-    condition: '04n',
-    temp: 17.6,
-  },
-  {
-    time: '21:00',
-    condition: '04n',
-    temp: 16.4,
-  },
-];
-
-export const mockRawHourlyWeather: RawHourlyWeather[] = [
-  {
-    dt: 1684926000, // 10:00
-    temp: 292.01,
-    weather: [
-      {
-        id: 803,
-        main: 'Clouds',
-        description: 'broken clouds',
-        icon: '04n',
-      },
-    ],
-  },
-  {
-    dt: 1684929600, // 11:00
-    temp: 293.12,
-    weather: [
-      {
-        id: 800,
-        main: 'Clear',
-        description: 'clear sky',
-        icon: '01d',
-      },
-    ],
-  },
-  {
-    dt: 1684933200, // 12:00
-    temp: 294.23,
-    weather: [
-      {
-        id: 802,
-        main: 'Clouds',
-        description: 'scattered clouds',
-        icon: '03d',
-      },
-    ],
-  },
-  // ...추가
-];
-
-export const mockDailyWeather: WeatherData = {
-  location: '롯데월드',
-  current: {
-    temp: 285.15,
-    feels_like: 284.3,
+export interface CombinedWeatherResponse {
+  currentResponse: CurrentResponse;
+  dailyResponse: DailyForecast[];
+  hourlyResponse: HourlyWeather[];
+}
+  
+export const mockWeatherData: CombinedWeatherResponse = {
+  currentResponse: {
+    date: '2025-05-20',
+    weatherDescription: '흐림',
+    temperature: 285.15,
+    feelsLike: 284.3,
     humidity: 68,
-    wind_speed: 2.1,
-    uvi: 1.2,
-    sunrise: 1684926645,
-    weather: [
-      {
-        id: 803,
-        main: 'Clouds',
-        description: '부분적으로 흐림',
-        icon: 'clouds-afternoon',
-      },
-    ],
+    windDirection: '북동',
+    windSpeed: 2.1,
+    sunset: '2025-05-20T19:34:00',
+    uviLevel: '보통',
+    airPollution: {
+      pm10Level: '좋음',
+      pm2_5Level: '보통',
+    },
   },
-  pm10Grade: '좋음',
-  pm25Grade: '보통',
+  dailyResponse: [
+    {
+      date: '2025-05-20',
+      weatherDescription: 'cloudy',
+      dayTemperature: 20.4,
+      eveTemperature: 18.5,
+      humidity: 65,
+    },
+    {
+      date: '2025-05-21',
+      weatherDescription: 'clear sky',
+      dayTemperature: 22.4,
+      eveTemperature: 18.2,
+      humidity: 60,
+    },
+    {
+      date: '2025-05-22',
+      weatherDescription: 'rain',
+      dayTemperature: 19.1,
+      eveTemperature: 17.8,
+      humidity: 80,
+    },
+    {
+      date: '2025-05-23',
+      weatherDescription: 'cloudy',
+      dayTemperature: 21.3,
+      eveTemperature: 18.7,
+      humidity: 72,
+    },
+    {
+      date: '2025-05-24',
+      weatherDescription: 'clear sky',
+      dayTemperature: 24.6,
+      eveTemperature: 20.1,
+      humidity: 55,
+    },
+    {
+      date: '2025-05-25',
+      weatherDescription: 'overcast clouds',
+      dayTemperature: 22.9,
+      eveTemperature: 19.4,
+      humidity: 68,
+    },
+    {
+      date: '2025-05-26',
+      weatherDescription: 'rain',
+      dayTemperature: 18.7,
+      eveTemperature: 16.5,
+      humidity: 85,
+    },
+  ],
+  hourlyResponse: [
+    { date: '2025-05-20T06:00', weatherDescription: 'cloudy', temperature: 16.4 },
+    { date: '2025-05-20T07:00', weatherDescription: 'cloudy', temperature: 17.2 },
+    { date: '2025-05-20T08:00', weatherDescription: 'cloudy', temperature: 18.0 },
+    { date: '2025-05-20T09:00', weatherDescription: 'clear sky', temperature: 18.4 },
+    { date: '2025-05-20T10:00', weatherDescription: 'clear sky', temperature: 19.2 },
+    { date: '2025-05-20T11:00', weatherDescription: 'clear sky', temperature: 20.1 },
+    { date: '2025-05-20T12:00', weatherDescription: 'clear sky', temperature: 21.0 },
+    { date: '2025-05-20T13:00', weatherDescription: 'clear sky', temperature: 21.5 },
+    { date: '2025-05-20T14:00', weatherDescription: 'clear sky', temperature: 22.2 },
+    { date: '2025-05-20T15:00', weatherDescription: 'cloudy', temperature: 21.9 },
+    { date: '2025-05-20T16:00', weatherDescription: 'cloudy', temperature: 21.1 },
+    { date: '2025-05-20T17:00', weatherDescription: 'cloudy', temperature: 20.2 },
+    { date: '2025-05-20T18:00', weatherDescription: 'overcast clouds', temperature: 19.4 },
+    { date: '2025-05-20T19:00', weatherDescription: 'overcast clouds', temperature: 18.3 },
+  ],
 };
-
-export const mockWeeklyWeather: DailyForecast[] = [
-  {
-    date: '2025-05-12',
-    morning: {
-      temp: 18.16,
-      condition: 'clear sky',
-    },
-    afternoon: {
-      temp: 22.48,
-      condition: 'clear sky',
-    },
-  },
-  {
-    date: '2025-05-13',
-    morning: {
-      temp: 24.1,
-      condition: 'overcast clouds',
-    },
-    afternoon: {
-      temp: 22.42,
-      condition: 'overcast clouds',
-    },
-  },
-  {
-    date: '2025-05-14',
-    morning: {
-      temp: 25.28,
-      condition: 'clear sky',
-    },
-    afternoon: {
-      temp: 22.26,
-      condition: 'clear sky',
-    },
-  },
-  {
-    date: '2025-05-15',
-    morning: {
-      temp: 19.2,
-      condition: 'overcast clouds',
-    },
-    afternoon: {
-      temp: 19.51,
-      condition: 'overcast clouds',
-    },
-  },
-  {
-    date: '2025-05-16',
-    morning: {
-      temp: 23.01,
-      condition: 'overcast clouds',
-    },
-    afternoon: {
-      temp: 21.96,
-      condition: 'overcast clouds',
-    },
-  },
-];
