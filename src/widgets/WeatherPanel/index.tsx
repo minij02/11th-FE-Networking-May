@@ -51,8 +51,8 @@ export const WeatherPanel = () => {
 
       <div
         className="flex w-[1080px] p-[24px] flex-col items-start gap-[12px] 
-                rounded-[16px] border border-[#F2F2F2] bg-white 
-                shadow-[0px_0px_8px_2px_rgba(0,0,0,0.10)]"
+                  rounded-[16px] border border-[#F2F2F2] bg-white 
+                  shadow-[0px_0px_8px_2px_rgba(0,0,0,0.10)]"
       >
         <WeeklyForecast />
       </div>
