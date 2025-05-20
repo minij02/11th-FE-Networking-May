@@ -6,18 +6,7 @@ import { formatTime } from '@/shared/lib/weatherUtils';
 import { mockWeatherData } from '@/entities/weather/model/types';
 import { useEffect } from 'react';
 import { formatTemperature } from '@/shared/lib/weatherUtils';
-import MorningSun from '@/assets/icons/sun-morning.png';
-import NightSun from '@/assets/icons/sun-night.png';
-import MorningClouds from '@/assets/icons/clouds-morning.png';
-import NightClouds from '@/assets/icons/clouds-night.png';
-import MorningRain from '@/assets/icons/rain-morning.png';
-import NightRain from '@/assets/icons/rain-night.png';
-import MorningWind from '@/assets/icons/wind-morning.png';
-import NightWind from '@/assets/icons/wind-night.png';
-import MorningSnow from '@/assets/icons/snow-morning.png';
-import NightSnow from '@/assets/icons/snow-night.png';
-import MorningLightning from '@/assets/icons/lightning-morning.png';
-import NightLightning from '@/assets/icons/lightning-night.png';
+import { getWeatherIcon } from '@/shared/lib/getWeatherIcon';
 
 export const DailyWeatherCard = () => {
   const { selectedLocation: placeId, locations } = useLocationStore();
@@ -57,29 +46,6 @@ export const DailyWeatherCard = () => {
     ? (dayjs(firstHourly.date).hour() >= 6 && dayjs(firstHourly.date).hour() < 18)
     : true;
   const timeLabel = isDaytime ? "주간" : "야간";
-
-  const getWeatherIcon = (description: string, isDaytime: boolean) => {
-  const desc = description.toLowerCase();
-
-  if (desc.includes('clear')) {
-    return isDaytime ? MorningSun : NightSun;
-  }
-  if (desc.includes('cloud')) {
-    return isDaytime ? MorningClouds : NightClouds;
-  }
-  if (desc.includes('rain')) {
-    return isDaytime ? MorningRain : NightRain;
-  }
-  if (desc.includes('thunderstorm')) {
-    return isDaytime ? MorningLightning : NightLightning;
-  }
-  if (desc.includes('snow')) {
-    return isDaytime ? MorningSnow : NightSnow;
-  }
-
-  // 기본 아이콘 (wind)
-  return isDaytime ? MorningWind : NightWind;
-};
 
   return (
   <div className="flex w-[1080px] p-8 flex-col items-start gap-3">

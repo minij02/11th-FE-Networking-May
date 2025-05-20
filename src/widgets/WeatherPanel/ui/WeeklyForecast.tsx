@@ -3,8 +3,7 @@ import type { DailyForecast } from '@/entities/weather/model/types';
 import { fetchWeather } from '@/entities/weather/api/weatherApi';
 import useLocationStore from '@/shared/store/useLocationStore';
 import dayjs from 'dayjs';
-import RainIcon from '@/assets/icons/rain-morning.png'; // 전체 날씨 아이콘으로 사용
-import SunIcon from '@/assets/icons/sun-morning.png'; // 조건부 변경 가능
+import { getWeatherIcon } from '@/shared/lib/getWeatherIcon';
 import { mockWeatherData } from '@/entities/weather/model/types';
 import { formatTemperature } from '@/shared/lib/weatherUtils';
 
@@ -39,7 +38,7 @@ export const WeeklyForecast = () => {
               <div className="flex flex-col items-center gap-1">
                 <div className="w-[40px] h-[40px] aspect-square flex justify-center items-center">
                   <img
-                    src={RainIcon} // weatherDescription에 따라 조건부로 아이콘 변경 가능
+                    src={getWeatherIcon(day.weatherDescription, true)} // weatherDescription에 따라 조건부로 아이콘 변경 가능
                     alt="날씨 아이콘"
                     className="object-contain w-full h-full"
                   />

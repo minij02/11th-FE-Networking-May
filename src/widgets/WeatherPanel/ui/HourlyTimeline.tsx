@@ -2,8 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { HourlyWeather } from "@/entities/weather/model/types";
 import { fetchWeather } from "@/entities/weather/api/weatherApi";
 import useLocationStore from "@/shared/store/useLocationStore";
-import WindIcon from "@/assets/icons/wind-morning.png";
-import WindAfternoonIcon from "@/assets/icons/wind-night.png";
+import { getWeatherIcon } from "@/shared/lib/getWeatherIcon";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { mockWeatherData } from "@/entities/weather/model/types";
@@ -59,7 +58,8 @@ export const HourlyTimeline = () => {
           {hourlyData.map((hour, index) => {
             const dateTime = dayjs(hour.date);
             const hourNumber = dateTime.hour();
-            const iconSrc = hourNumber >= 6 && hourNumber < 18 ? WindIcon : WindAfternoonIcon;
+            const isDaytime = hourNumber >= 6 && hourNumber < 18;
+            const iconSrc = getWeatherIcon(hour.weatherDescription, isDaytime);
             const dotY = 80 - ((hour.temperature - minTemp) / (maxTemp - minTemp || 1)) * 60;
 
             return (
