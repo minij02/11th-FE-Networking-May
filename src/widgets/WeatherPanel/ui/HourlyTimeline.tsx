@@ -7,6 +7,7 @@ import WindAfternoonIcon from "@/assets/icons/wind-night.png";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { mockWeatherData } from "@/entities/weather/model/types";
+import { formatTemperature } from '@/shared/lib/weatherUtils';
 
 export const HourlyTimeline = () => {
   const { selectedLocation: placeId } = useLocationStore();
@@ -37,7 +38,7 @@ export const HourlyTimeline = () => {
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <div className="text-base font-semibold text-black font-pretendard">시간별 현황</div>
+      <div className="text-[20px] font-[700] text-black font-pretendard">시간별 현황</div>
 
       <div className="relative overflow-x-auto">
         {/* 선 그래프 */}
@@ -87,7 +88,7 @@ export const HourlyTimeline = () => {
                   </div>
                   {/* 온도 */}
                   <div className="text-sm font-medium text-black">
-                    {hour.temperature}°
+                    {formatTemperature(hour.temperature)}°
                   </div>
                 </div>
               </div>

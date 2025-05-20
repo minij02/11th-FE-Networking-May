@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import RainIcon from '@/assets/icons/rain-morning.png'; // 전체 날씨 아이콘으로 사용
 import SunIcon from '@/assets/icons/sun-morning.png'; // 조건부 변경 가능
 import { mockWeatherData } from '@/entities/weather/model/types';
+import { formatTemperature } from '@/shared/lib/weatherUtils';
 
 export const WeeklyForecast = () => {
   const { selectedLocation: placeId } = useLocationStore();
@@ -23,7 +24,7 @@ export const WeeklyForecast = () => {
 
   return (
     <div className="w-full">
-      <div className="text-base font-semibold mb-3 text-black font-pretendard">주간 예보</div>
+      <div className="text-[20px] font-[700] text-black font-pretendard">주간 예보</div>
       <div className="flex overflow-x-auto gap-4">
         {weeklyData.map((day, index) => {
           const isToday = index === 0;
@@ -51,12 +52,12 @@ export const WeeklyForecast = () => {
                 {/* 오전 */}
                 <div className="flex flex-col justify-center items-center gap-[6px] py-[6px]">
                   <div className="text-xs text-gray-500 font-semibold">오전</div>
-                  <div className="text-sm text-black font-medium">{day.dayTemperature}°</div>
+                  <div className="text-sm text-black font-medium">{formatTemperature(day.dayTemperature)}°</div>
                 </div>
                 {/* 오후 */}
                 <div className="flex flex-col justify-center items-center gap-[6px] py-[6px]">
                   <div className="text-xs text-gray-500 font-semibold">오후</div>
-                  <div className="text-sm text-gray-400 font-medium">{day.eveTemperature}°</div>
+                  <div className="text-sm text-gray-400 font-medium">{formatTemperature(day.eveTemperature)}°</div>
                 </div>
               </div>
 
