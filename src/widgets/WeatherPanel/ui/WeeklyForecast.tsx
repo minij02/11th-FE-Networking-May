@@ -25,7 +25,7 @@ export const WeeklyForecast = () => {
   return (
     <div className="w-full">
       <div className="text-[20px] font-[700] text-black font-pretendard">주간 예보</div>
-      <div className="flex overflow-x-auto gap-4">
+      <div className="grid grid-cols-5 gap-4">
         {weeklyData.map((day, index) => {
           const isToday = index === 0;
           const dayLabel = isToday ? '오늘' : daysKr[dayjs(day.date).day()];
@@ -33,7 +33,7 @@ export const WeeklyForecast = () => {
           return (
             <div
               key={day.date}
-              className="flex flex-col justify-center items-center gap-2 flex-shrink-0 w-[160px]"
+              className="flex flex-col justify-center items-center gap-2"
             >
               {/* 대표 아이콘 + 습도 */}
               <div className="flex flex-col items-center gap-1">
