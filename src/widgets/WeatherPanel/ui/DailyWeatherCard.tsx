@@ -41,6 +41,12 @@ export const DailyWeatherCard = () => {
     airPollution,
   } = weather.currentResponse;
   
+    const firstHourly = weather.hourlyResponse?.[0];
+  const isDaytime = firstHourly
+    ? (dayjs(firstHourly.date).hour() >= 6 && dayjs(firstHourly.date).hour() < 18)
+    : true;
+  const timeLabel = isDaytime ? "주간" : "야간";
+
   return (
   <div className="flex w-[1080px] p-8 flex-col items-start gap-3">
 
@@ -59,7 +65,7 @@ export const DailyWeatherCard = () => {
       </span>
     </div>
     <div className="text-center text-gray-500 text-base font-[700] font-medium font-pretendard">
-      {weatherDescription}
+      {timeLabel} / {weatherDescription}
     </div>
     <div className="text-sm text-gray-600 font-[700] font-pretendard">
       체감 {formatTemperature(feelsLike)}° · 습도 {humidity}% · {windDirection}풍 {windSpeed}m/s
