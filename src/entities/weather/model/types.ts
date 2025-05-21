@@ -85,20 +85,6 @@ export const mockWeatherData: CombinedWeatherResponse = {
       eveTemperature: 20.1,
       humidity: 55,
     },
-    {
-      date: '2025-05-25',
-      weatherDescription: 'overcast clouds',
-      dayTemperature: 22.9,
-      eveTemperature: 19.4,
-      humidity: 68,
-    },
-    {
-      date: '2025-05-26',
-      weatherDescription: 'rain',
-      dayTemperature: 18.7,
-      eveTemperature: 16.5,
-      humidity: 85,
-    },
   ],
   hourlyResponse: [
     { date: '2025-05-20T06:00', weatherDescription: 'cloudy', temperature: 16.4 },
