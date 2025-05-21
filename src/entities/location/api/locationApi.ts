@@ -41,3 +41,16 @@ export const addLocation = async (data: LocationRequest): Promise<number> => {
     throw new Error("위치 추가 중 에러가 발생했습니다.");
   }
 };
+
+export const togglePinLocation = async (placeId: number): Promise<number> => {
+  try {
+    const response = await axios.post<{ status: number; data: number }>(
+      `/api/v1/places/pin/${placeId}`,
+      null // 빈 바디
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("핀 토글 실패:", error);
+    throw new Error("위치 핀 상태 변경 중 문제가 발생했습니다.");
+  }
+};

@@ -13,6 +13,7 @@ interface LocationState {
   locations: Location[];
   selectedLocationId: number | null;
 
+  togglePin: (id: number) => void;
   setLocations: (locations: Location[]) => void;
   addLocation: (location: Location) => void;
   removeLocation: (id: number) => void;
@@ -22,6 +23,13 @@ interface LocationState {
 const useLocationStore = create<LocationState>((set) => ({
   locations: [],
   selectedLocationId: null,
+
+  togglePin: (id) =>
+    set((state) => ({
+      locations: state.locations.map((loc) =>
+        loc.id === id ? { ...loc, pinned: !loc.pinned } : loc
+      ),
+    })),
 
   setLocations: (locations) => set({ locations }),
 

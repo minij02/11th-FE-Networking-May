@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useLocationStore from "../../shared/store/useLocationStore";
+import { togglePinLocation } from "@/entities/location/api/locationApi";
 
 // PNG 파일 import
 import MapPinIcon from "@/assets/icons/map-pin-front-color.png";
@@ -17,16 +18,35 @@ const LocationSidebar = ({
   openModal,
   openDeleteModal,
 }: LocationSidebarProps) => {
-  const { locations } = useLocationStore();
-  const [activeIcon, setActiveIcon] = useState<{ [key: number]: boolean }>({});
+  const { locations, togglePin } = useLocationStore();
+  const [loadingIds, setLoadingIds] = useState<number[]>([]);
 
-  // 아이콘 클릭 시 ColorPinIcon으로 토글 (고정 기능)
-  const handleIconClick = (id: number, e: React.MouseEvent) => {
+  const handleIconClick = async (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    setActiveIcon((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+
+    // 중복 요청 방지
+    if (loadingIds.includes(id)) return;
+    setLoadingIds((prev) => [...prev, id]);
+
+    const location = locations.find((loc) => loc.id === id);
+    const wasPinned = location?.pinned;
+
+    try {
+      await togglePinLocation(id); // 서버 API 요청
+      togglePin(id); // 로컬 상태 변경
+
+      const message = wasPinned
+        ? "장소 고정이 해제되었습니다."
+        : "장소가 고정되었습니다.";
+
+      alert(message);
+      console.log(`${message} (ID: ${id})`);
+    } catch {
+      alert("핀 상태 변경에 실패했습니다.");
+      console.error("핀 상태 변경 실패");
+    } finally {
+      setLoadingIds((prev) => prev.filter((pid) => pid !== id));
+    }
   };
 
   return (
@@ -64,7 +84,7 @@ const LocationSidebar = ({
           >
             <img
               className="w-[24px] h-[24px] aspect-square cursor-pointer"
-              src={activeIcon[loc.id] ? ColorPinIcon : PinIcon}
+              src={loc.pinned ? ColorPinIcon : PinIcon}
               alt="Pin"
               onClick={(e) => handleIconClick(loc.id, e)}
             />
