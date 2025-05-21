@@ -1,18 +1,22 @@
 import { useEffect } from "react";
 import ThunderIcon from "@/assets/thunder-icon.png";
 import ModalPortal from "@/shared/ui/ModalPortal";
+import { deleteLocation } from "@/entities/location/api/locationApi";
+import useLocationStore from "@/shared/store/useLocationStore";
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onDelete: () => void;
+  deleteTargetId: number | null;
 }
 
 const DeleteConfirmModal = ({
   isOpen,
   onClose,
-  onDelete,
+  deleteTargetId,
 }: DeleteConfirmModalProps) => {
+  const { removeLocation } = useLocationStore();
+
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -26,7 +30,20 @@ const DeleteConfirmModal = ({
     };
   }, [onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || deleteTargetId === null) return null;
+
+  const handleDelete = async () => {
+    try {
+      await deleteLocation(deleteTargetId);
+      removeLocation(deleteTargetId);
+      alert("위치가 삭제되었습니다.");
+      console.log(`위치 ID ${deleteTargetId} 삭제 성공`);
+      onClose();
+    } catch (error) {
+      alert("위치 삭제에 실패했습니다.");
+      console.error("위치 삭제 실패:", error);
+    }
+  };
 
   return (
     <ModalPortal>
@@ -49,7 +66,7 @@ const DeleteConfirmModal = ({
           </button>
           <button
             className="px-[24px] py-[6px] rounded-[6px] bg-[#292E2E] text-[#FFFFFF] font-pretendard text-[20px] font-[600]"
-            onClick={onDelete}
+            onClick={handleDelete}
           >
             삭제하기
           </button>

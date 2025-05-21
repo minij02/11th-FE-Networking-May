@@ -4,13 +4,17 @@ import Clouds from "@/assets/icons/clouds-morning.png";
 import SearchIcon from "@/assets/icons/search-icon.png";
 import CheckIcon from "@/assets/icons/check-icon.png";
 import ModalPortal from "@/shared/ui/ModalPortal";
+import type { Marker as LocationMarker } from "@/entities/location/model/locationTypes";
+import { useAddLocation } from "../model/useAddLocation";
+import { getAllLocations } from "@/entities/location/api/locationApi";
+import useLocationStore from "@/shared/store/useLocationStore";
 
 interface AddLocationModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface Marker {
+interface SearchResultMarker {
   position: {
     lat: number;
     lng: number;
@@ -21,8 +25,11 @@ interface Marker {
 
 const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
-  const [markers, setMarkers] = useState<Marker[]>([]);
+  const [selectedLocation, setSelectedLocation] =
+    useState<SearchResultMarker | null>(null);
+  const [markers, setMarkers] = useState<SearchResultMarker[]>([]);
+  const { submitLocation, isLoading, error } = useAddLocation();
+  const { setLocations } = useLocationStore();
 
   // 검색어 변경 시 검색 요청
   useEffect(() => {
@@ -33,7 +40,7 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
     ps.keywordSearch(searchKeyword, (data, status) => {
       if (status === kakao.maps.services.Status.OK) {
         const bounds = new kakao.maps.LatLngBounds();
-        const newMarkers: Marker[] = data.map((place) => {
+        const newMarkers: SearchResultMarker[] = data.map((place) => {
           const position = {
             lat: parseFloat(place.y),
             lng: parseFloat(place.x),
@@ -60,22 +67,35 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
     setSearchKeyword(e.target.value);
   };
 
-  // 체크 아이콘 토글 기능
-  const handleLocationClick = (marker: Marker) => {
+  // 장소 클릭 시 선택/해제
+  const handleLocationClick = (marker: SearchResultMarker) => {
     setSelectedLocation((prev) =>
-      prev === marker.content ? null : marker.content
+      prev?.content === marker.content ? null : marker
     );
   };
 
-  // 확인 버튼 클릭 시
-  const handleConfirm = () => {
+  // 확인 버튼 클릭 시 서버 전송
+  const handleConfirm = async () => {
     if (selectedLocation) {
-      const selectedPlace = markers.find(
-        (marker) => marker.content === selectedLocation
-      );
-      console.log("선택된 위치:", selectedPlace);
+      const locationData: LocationMarker = {
+        position: selectedLocation.position,
+        content: selectedLocation.content,
+        address: selectedLocation.address,
+      };
+
+      await submitLocation(locationData);
+      alert(`위치가 추가되었습니다: ${selectedLocation.content}`);
+
+      // 위치 목록 새로 가져오기
+      try {
+        const updated = await getAllLocations();
+        setLocations(updated);
+      } catch (e) {
+        console.error("위치 목록 갱신 실패:", e);
+      }
+
+      onClose();
     }
-    onClose();
   };
 
   useEffect(() => {
@@ -143,7 +163,9 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
                 <div
                   key={`${marker.position.lat}-${marker.position.lng}`}
                   className={`relative flex items-center p-[8px_12px] gap-[4px] cursor-pointer border-b border-[#A4A4A4] ${
-                    selectedLocation === marker.content ? "bg-gray-100" : ""
+                    selectedLocation?.content === marker.content
+                      ? "bg-gray-100"
+                      : ""
                   }`}
                   onClick={() => handleLocationClick(marker)}
                 >
@@ -156,7 +178,7 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
                     </div>
                   </div>
 
-                  {selectedLocation === marker.content && (
+                  {selectedLocation?.content === marker.content && (
                     <div
                       className="absolute right-[8px] bottom-[7.5px] w-[36px] h-[36px] bg-cover bg-center"
                       style={{ backgroundImage: `url(${CheckIcon})` }}
@@ -174,11 +196,18 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
           <div className="flex justify-end mt-[16px]">
             <button
               onClick={handleConfirm}
-              className="bg-[#292E2E] text-[#FFFFFF] px-[30px] py-[6px] rounded-[6px] font-pretendard text-[20px] font-[600]"
+              disabled={!selectedLocation || isLoading}
+              className={`px-[30px] py-[6px] rounded-[6px] font-pretendard text-[20px] font-[600] ${
+                !selectedLocation || isLoading
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-[#292E2E] text-[#FFFFFF]"
+              }`}
             >
-              확인
+              {isLoading ? "전송 중..." : "확인"}
             </button>
           </div>
+
+          {error && <div className="text-red-500 mt-2">{error}</div>}
         </div>
       </div>
     </ModalPortal>

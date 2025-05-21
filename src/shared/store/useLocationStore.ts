@@ -1,27 +1,37 @@
-// 임시 데이터
 import { create } from "zustand";
 
-interface Location {
-  id: string;
-  name: string;
-  lat: string;
-  lon: string;
+// 서버에서 받아오는 위치 타입
+export interface Location {
+  id: number;
+  placeName: string;
+  x: number;
+  y: number;
+  pinned: boolean;
 }
 
 interface LocationState {
   locations: Location[];
-  selectedLocation: string | null;
+  selectedLocationId: number | null;
+
+  togglePin: (id: number) => void;
+  setLocations: (locations: Location[]) => void;
   addLocation: (location: Location) => void;
-  removeLocation: (id: string) => void;
-  selectLocation: (id: string) => void;
+  removeLocation: (id: number) => void;
+  selectLocation: (id: number) => void;
 }
 
 const useLocationStore = create<LocationState>((set) => ({
-  locations: [
-    { id: "1", name: "서울역", lat: "37.5563", lon: "126.9725" },
-    { id: "2", name: "강남역", lat: "37.4979", lon: "127.0276" },
-  ],
-  selectedLocation: null,
+  locations: [],
+  selectedLocationId: null,
+
+  togglePin: (id) =>
+    set((state) => ({
+      locations: state.locations.map((loc) =>
+        loc.id === id ? { ...loc, pinned: !loc.pinned } : loc
+      ),
+    })),
+
+  setLocations: (locations) => set({ locations }),
 
   addLocation: (location) =>
     set((state) => ({
@@ -35,9 +45,8 @@ const useLocationStore = create<LocationState>((set) => ({
 
   selectLocation: (id) =>
     set(() => ({
-      selectedLocation: id,
+      selectedLocationId: id,
     })),
 }));
 
 export default useLocationStore;
-export type { Location };
