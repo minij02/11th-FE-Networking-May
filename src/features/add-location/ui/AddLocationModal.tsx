@@ -6,6 +6,8 @@ import CheckIcon from "@/assets/icons/check-icon.png";
 import ModalPortal from "@/shared/ui/ModalPortal";
 import type { Marker as LocationMarker } from "@/entities/location/model/locationTypes";
 import { useAddLocation } from "../model/useAddLocation";
+import { getAllLocations } from "@/entities/location/api/locationApi";
+import useLocationStore from "@/shared/store/useLocationStore";
 
 interface AddLocationModalProps {
   isOpen: boolean;
@@ -27,6 +29,7 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
     useState<SearchResultMarker | null>(null);
   const [markers, setMarkers] = useState<SearchResultMarker[]>([]);
   const { submitLocation, isLoading, error } = useAddLocation();
+  const { setLocations } = useLocationStore();
 
   // 검색어 변경 시 검색 요청
   useEffect(() => {
@@ -82,6 +85,15 @@ const AddLocationModal = ({ isOpen, onClose }: AddLocationModalProps) => {
 
       await submitLocation(locationData);
       alert(`위치가 추가되었습니다: ${selectedLocation.content}`);
+
+      // 위치 목록 새로 가져오기
+      try {
+        const updated = await getAllLocations();
+        setLocations(updated);
+      } catch (e) {
+        console.error("위치 목록 갱신 실패:", e);
+      }
+
       onClose();
     }
   };
