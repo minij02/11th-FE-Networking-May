@@ -10,7 +10,7 @@ export const WeatherPanel = () => {
 
   useEffect(() => {
     if (!placeId) {
-      selectLocation("1"); // mock locationId
+      selectLocation(2); // mock locationId
     }
   }, [placeId, selectLocation]);
 
