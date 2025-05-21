@@ -10,6 +10,7 @@ type ModalType = "add" | "delete" | null;
 
 const MainLayout = () => {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
   const { setLocations } = useLocationStore();
 
   // 컴포넌트 마운트 시 위치 데이터 요청
@@ -26,20 +27,23 @@ const MainLayout = () => {
     fetchLocations();
   }, [setLocations]);
 
-  // 모달 열기/닫기
+  // 모달 열기
   const openModal = (type: ModalType) => setActiveModal(type);
-  const closeModal = () => setActiveModal(null);
 
-  const handleDelete = () => {
-    console.log("삭제됨");
-    closeModal();
+  // 모달 닫기 및 삭제 타겟 초기화
+  const closeModal = () => {
+    setActiveModal(null);
+    setDeleteTargetId(null);
   };
 
   return (
     <div className="relative flex h-screen">
       <LocationSidebar
         openModal={() => openModal("add")}
-        openDeleteModal={() => openModal("delete")}
+        openDeleteModal={(id: number) => {
+          setDeleteTargetId(id);
+          openModal("delete");
+        }}
       />
 
       <main className="flex-1 ml-[248px] p-4 relative z-[10]">
@@ -60,7 +64,7 @@ const MainLayout = () => {
         <DeleteConfirmModal
           isOpen={true}
           onClose={closeModal}
-          onDelete={handleDelete}
+          deleteTargetId={deleteTargetId}
         />
       )}
     </div>

@@ -54,3 +54,13 @@ export const togglePinLocation = async (placeId: number): Promise<number> => {
     throw new Error("위치 핀 상태 변경 중 문제가 발생했습니다.");
   }
 };
+
+export const deleteLocation = async (id: number): Promise<void> => {
+  try {
+    await axios.delete(`/api/v1/places/${id}`);
+    console.log(`위치 삭제 완료: ID ${id}`);
+  } catch (error) {
+    console.error("위치 삭제 실패:", error);
+    throw new Error("위치 삭제에 실패했습니다.");
+  }
+};

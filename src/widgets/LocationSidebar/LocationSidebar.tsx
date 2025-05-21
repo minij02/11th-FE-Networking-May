@@ -11,7 +11,7 @@ import TrashIcon from "@/assets/icons/trash-can-front-color.png";
 
 interface LocationSidebarProps {
   openModal: () => void;
-  openDeleteModal: () => void;
+  openDeleteModal: (id: number) => void;
 }
 
 const LocationSidebar = ({
@@ -95,7 +95,10 @@ const LocationSidebar = ({
 
             <div
               className="ml-auto p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={openDeleteModal}
+              onClick={(e) => {
+                e.stopPropagation(); // 이벤트 버블링 방지
+                openDeleteModal(loc.id); // ID 전달
+              }}
             >
               <img
                 src={TrashIcon}
