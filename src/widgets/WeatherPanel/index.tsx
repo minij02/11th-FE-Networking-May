@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { DailyWeatherCard } from "./ui/DailyWeatherCard";
 import { HourlyTimeline } from "./ui/HourlyTimeline";
 import { WeeklyForecast } from "./ui/WeeklyForecast";
@@ -6,29 +5,23 @@ import useLocationStore from "@/shared/store/useLocationStore";
 import CloudsImage from "@/assets/icons/clouds-morning.png";
 
 export const WeatherPanel = () => {
-  const { selectedLocation: placeId, selectLocation } = useLocationStore();
-
-  useEffect(() => {
-    if (!placeId) {
-      selectLocation("1"); // mock locationId
-    }
-  }, [placeId, selectLocation]);
+  const { selectedLocationId: placeId } = useLocationStore();
 
   if (!placeId) {
-     return (
-    <div className="flex flex-col justify-center items-center min-h-screen">
-      <div className="flex justify-center items-center w-[320px] h-[320px] aspect-square">
-        <img
-          src={CloudsImage}
-          alt="선택된 위치 없음"
-          className="object-contain w-full h-full"
-        />
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen">
+        <div className="flex justify-center items-center w-[320px] h-[320px] aspect-square">
+          <img
+            src={CloudsImage}
+            alt="선택된 위치 없음"
+            className="object-contain w-full h-full"
+          />
+        </div>
+        <p className="text-black text-[36px] font-bold leading-normal font-pretendard mt-4">
+          아직 선택된 위치가 없습니다!
+        </p>
       </div>
-      <p className="text-black text-[36px] font-bold leading-normal font-pretendard mt-4">
-        아직 선택된 위치가 없습니다!
-      </p>
-    </div>
-  );
+    );
   }
 
   return (
