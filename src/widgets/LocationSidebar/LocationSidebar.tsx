@@ -55,7 +55,7 @@ const LocationSidebar = ({
   };
 
   return (
-    <div className="absolute flex flex-col items-start gap-[40px] w-[248px] h-[1200px] p-[48px_16px] aspect-[31/150] bg-white rounded-tr-[48px] rounded-br-[48px] shadow-[2px_0px_4px_rgba(0,0,0,0.10)]">
+    <div className="absolute flex flex-col items-start gap-[40px] w-[248px] h-[1200px] z-50 p-[48px_16px] aspect-[31/150] bg-[#FFFFFF] rounded-tr-[48px] rounded-br-[48px] shadow-[2px_0px_4px_rgba(0,0,0,0.10)]">
       <div className="flex items-center gap-[16px] cursor-pointer">
         <img
           className="w-[40px] h-[40px] aspect-square"
