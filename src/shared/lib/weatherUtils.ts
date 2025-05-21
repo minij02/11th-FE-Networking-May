@@ -1,4 +1,6 @@
-export const kelvinToCelsius = (k: number) => Math.round(k - 273.15);
+export const formatTemperature = (value: number): string => {
+  return `${value.toFixed(1)}`;
+};
 
 export const formatTime = (timeString: string) =>
   new Date(timeString).toLocaleTimeString('ko-KR', {
