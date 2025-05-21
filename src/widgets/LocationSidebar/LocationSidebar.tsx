@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useLocationStore from "../../shared/store/useLocationStore";
 import { togglePinLocation } from "@/entities/location/api/locationApi";
 
@@ -18,8 +18,13 @@ const LocationSidebar = ({
   openModal,
   openDeleteModal,
 }: LocationSidebarProps) => {
-  const { locations, togglePin } = useLocationStore();
+  const { locations, togglePin, selectLocation, selectedLocationId } =
+    useLocationStore();
   const [loadingIds, setLoadingIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    console.log("현재 선택된 ID (사이드바):", selectedLocationId);
+  }, [selectedLocationId]);
 
   const handleIconClick = async (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -50,7 +55,7 @@ const LocationSidebar = ({
   };
 
   return (
-    <div className="absolute flex flex-col items-start gap-[40px] w-[248px] h-[1200px] p-[48px_16px] aspect-[31/150] bg-white rounded-tr-[48px] rounded-br-[48px] shadow-[2px_0px_4px_rgba(0,0,0,0.10)]">
+    <div className="absolute flex flex-col items-start gap-[40px] w-[248px] h-[1200px] z-50 p-[48px_16px] aspect-[31/150] bg-[#FFFFFF] rounded-tr-[48px] rounded-br-[48px] shadow-[2px_0px_4px_rgba(0,0,0,0.10)]">
       <div className="flex items-center gap-[16px] cursor-pointer">
         <img
           className="w-[40px] h-[40px] aspect-square"
@@ -81,6 +86,10 @@ const LocationSidebar = ({
           <div
             key={loc.id}
             className={`relative flex p-[8px] items-center gap-[12px] flex-[1_0_0] self-stretch cursor-pointer rounded-[12px] transition-all hover:bg-[#F2F2F2] hover:shadow-[-2px_2px_2px_1px_rgba(0,0,0,0.1)] group`}
+            onClick={() => {
+              console.log("선택한 위치 ID:", loc.id);
+              selectLocation(loc.id);
+            }}
           >
             <img
               className="w-[24px] h-[24px] aspect-square cursor-pointer"
