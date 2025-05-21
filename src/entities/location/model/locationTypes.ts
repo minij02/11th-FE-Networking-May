@@ -17,3 +17,11 @@ export interface Marker {
   content: string;
   address: string;
 }
+
+export interface LocationItem {
+  id: number;
+  placeName: string;
+  x: number;
+  y: number;
+  pinned: boolean;
+}

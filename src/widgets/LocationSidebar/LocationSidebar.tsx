@@ -18,10 +18,10 @@ const LocationSidebar = ({
   openDeleteModal,
 }: LocationSidebarProps) => {
   const { locations } = useLocationStore();
-  const [activeIcon, setActiveIcon] = useState<{ [key: string]: boolean }>({});
+  const [activeIcon, setActiveIcon] = useState<{ [key: number]: boolean }>({});
 
   // 아이콘 클릭 시 ColorPinIcon으로 토글 (고정 기능)
-  const handleIconClick = (id: string, e: React.MouseEvent) => {
+  const handleIconClick = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
     setActiveIcon((prev) => ({
       ...prev,
@@ -70,7 +70,7 @@ const LocationSidebar = ({
             />
 
             <div className="overflow-hidden text-gray-60 text-ellipsis font-pretendard text-[16px] font-[600] leading-none">
-              {loc.name}
+              {loc.placeName}
             </div>
 
             <div

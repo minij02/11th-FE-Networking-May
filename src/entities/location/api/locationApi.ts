@@ -2,10 +2,25 @@ import axios from "axios";
 import type {
   LocationRequest,
   LocationResponse,
+  LocationItem,
 } from "@/entities/location/model/locationTypes";
 
 // 환경에 따라 withCredentials 설정 분리
 const isLocalEnv = import.meta.env.MODE === "development";
+
+export const getAllLocations = async (): Promise<LocationItem[]> => {
+  const response = await axios.get<{ status: number; data: LocationItem[] }>(
+    "/api/v1/places", // 프록시 사용
+    {
+      headers: {
+        Accept: "*/*",
+      },
+      withCredentials: import.meta.env.MODE === "development",
+    }
+  );
+
+  return response.data.data;
+};
 
 export const addLocation = async (data: LocationRequest): Promise<number> => {
   try {

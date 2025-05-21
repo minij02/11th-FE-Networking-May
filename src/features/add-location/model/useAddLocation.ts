@@ -18,7 +18,7 @@ export const useAddLocation = () => {
       });
 
       console.log("Place ID:", placeId);
-      alert(`위치가 추가되었습니다. Place ID: ${placeId}`);
+      // alert(`위치가 추가되었습니다. Place ID: ${placeId}`);
     } catch (err) {
       console.error("API 요청 에러:", err);
       setError("위치 추가 중 에러가 발생했습니다.");
