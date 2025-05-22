@@ -8,7 +8,7 @@ import { mockWeatherData } from '@/entities/weather/model/types';
 import { formatTemperature } from '@/shared/lib/weatherUtils';
 
 export const WeeklyForecast = () => {
-  const { selectedLocation: placeId } = useLocationStore();
+  const { selectedLocationId: placeId } = useLocationStore();
 
   const { data, isLoading } = useQuery({
     queryKey: ['weather', placeId],
