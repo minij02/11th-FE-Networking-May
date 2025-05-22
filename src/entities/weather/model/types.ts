@@ -1,3 +1,8 @@
+export interface AirPollution {
+  pm10Level: string;
+  pm2_5Level: string;
+}
+
 export interface CurrentResponse {
   date: string;
   weatherDescription: string;
@@ -8,12 +13,11 @@ export interface CurrentResponse {
   sunset: string;
   uviLevel: string;
   windSpeed: number;
-  airPollution: {
-    pm10Level: string;
-    pm2_5Level: string;
-  };
+  airPollution: AirPollution;
+  airPollutionResponse?: AirPollution; // optional 처리 (백엔드 중복 방지)
 }
- export interface DailyForecast {
+
+export interface DailyForecast {
   date: string;
   weatherDescription: string;
   dayTemperature: number;
@@ -22,7 +26,7 @@ export interface CurrentResponse {
 }
 
 export interface HourlyWeather {
-  date: string; // 시각 (e.g., "2025-05-12T10:00")
+  date: string; // ISO format
   weatherDescription: string;
   temperature: number;
 }
@@ -32,19 +36,23 @@ export interface CombinedWeatherResponse {
   dailyResponse: DailyForecast[];
   hourlyResponse: HourlyWeather[];
 }
-  
+
 export const mockWeatherData: CombinedWeatherResponse = {
   currentResponse: {
     date: '2025-05-20',
     weatherDescription: '흐림',
-    temperature: 285.15,
-    feelsLike: 284.3,
+    temperature: 26.5,
+    feelsLike: 27.2,
     humidity: 68,
     windDirection: '북동',
     windSpeed: 2.1,
     sunset: '2025-05-20T19:34:00',
     uviLevel: '보통',
     airPollution: {
+      pm10Level: '좋음',
+      pm2_5Level: '보통',
+    },
+    airPollutionResponse: {
       pm10Level: '좋음',
       pm2_5Level: '보통',
     },

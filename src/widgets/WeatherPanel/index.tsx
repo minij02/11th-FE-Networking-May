@@ -5,7 +5,7 @@ import useLocationStore from "@/shared/store/useLocationStore";
 import CloudsImage from "@/assets/icons/clouds-morning.png";
 
 export const WeatherPanel = () => {
-  const { selectedLocationId: placeId,} = useLocationStore();
+  const { selectedLocationId: placeId } = useLocationStore();
 
   if (!placeId) {
     return (
